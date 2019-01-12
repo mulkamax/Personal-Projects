@@ -1,0 +1,71 @@
+var age = 51;//prompt('What is your age?');
+var provider = 'Voya'; //prompt('Who is your current provider?');
+var maritalStatus = 'Single'; //prompt('What is your marital status?');
+var balance = 700000; //prompt('What is your current 401k balance?');
+var savingsPerPeriod = 250; //prompt('What is your current savings per pay period?');
+var income = 100000; //prompt('What is your current annual income?');
+var payPeriods = 2; //prompt('How many pay periods do you have per month?');
+var retirementAge = 65; //prompt('What age would you like to retire at?')
+var rateOfReturn = .06; //prompt('What is your expected rate of return? (6% is average while some may pick in between 4% and 8%)');
+
+// Functions
+function calcMonthlyIncome(income) {
+    return income/12;
+}
+
+function calcSavingRate(monthlyIncome, payPeriods, savingsPerPeriod) {
+    var payPerPeriod  = monthlyIncome/payPeriods;
+    return (savingsPerPeriod/payPerPeriod)*100;
+}
+
+function calcInflation(income, retirementAge, age) {
+    var avgInflation = 0.025; // average over the past 20 years
+    return income + (income*avgInflation)*(retirementAge - age);
+}
+
+function calcRetirementMoney(retirementAge, maritalStatus, income, incomeAtRetirement, rateOfReturn) {
+    var adjusted = incomeAtRetirement*.80;
+    var socialAmount; // This is based on an estimated income calculations and if you anticipate living into the 90s. It's also based on male stats due to living less to make it so people can overestimate a little bit on how much they need to save.
+    if (maritalStatus === 'Single') { // stats from 2017
+        if (income >= 110000) {
+            if (retirementAge <= 65) {
+                socialAmount = 2050;
+            } else if (retirementAge > 65 && retirementAge < 69) {
+                socialAmount = 2929;
+            } else {
+                socialAmount = 3632;
+            }
+        } else if (income >= 89000 && income < 110000) {
+            if (retirementAge <= 65) {
+                socialAmount = 1881;
+            } else if (retirementAge > 65 && retirementAge < 69) {
+                socialAmount = 2687;
+            } else {
+                socialAmount = 3332;
+            }
+        } else if (income >= 70000 && income < 89000) {
+            if (retirementAge <= 65) {
+                socialAmount = 1706;
+            } else if (retirementAge > 65 && retirementAge < 69) {
+                socialAmount = 2437;
+            } else {
+                socialAmount = 3022;
+            }
+        }
+    }
+    var afterSocialSecurity = adjusted - (socialAmount*12);
+    return afterSocialSecurity/rateOfReturn;
+}
+
+function calcMoneyNeeded(totalSavings, balance) {
+    return totalSavings - balance;
+}
+
+
+
+
+console.log('Your monthly income is: $' + calcMonthlyIncome(income));
+console.log('Your savings rate is: ' + calcSavingRate(calcMonthlyIncome(income), payPeriods, savingsPerPeriod) + '%');
+console.log('Your annual income at retirement after inflation is: $' + calcInflation(income, retirementAge, age));
+console.log('Your expected total savings for retirement is: $' + calcRetirementMoney(retirementAge, maritalStatus, income, calcInflation(income, retirementAge, age), rateOfReturn));
+console.log('Your total amount left needed for retirement: $' + calcMoneyNeeded(calcRetirementMoney(retirementAge, maritalStatus, income, calcInflation(income, retirementAge, age), rateOfReturn), balance))
