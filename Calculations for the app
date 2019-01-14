@@ -51,6 +51,30 @@ function calcRetirementMoney(retirementAge, maritalStatus, income, incomeAtRetir
             } else {
                 socialAmount = 3022;
             }
+        } else if (income >= 50000 && income < 70000) {
+          if (retirementAge <= 65) {
+              socialAmount = 1483;
+          } else if (retirementAge > 65 && retirementAge < 69) {
+              socialAmount = 2119;
+          } else {
+              socialAmount = 2628;
+          }
+        } else if (income >= 30000 && income < 50000) {
+          if (retirementAge <= 65) {
+              socialAmount = 1110;
+          } else if (retirementAge > 65 && retirementAge < 69) {
+              socialAmount = 1586;
+          } else {
+              socialAmount = 1967;
+          }
+        } else {
+          if (retirementAge <= 65) {
+              socialAmount = 737;
+          } else if (retirementAge > 65 && retirementAge < 69) {
+              socialAmount = 1053;
+          } else {
+              socialAmount = 1305;
+          }
         }
     }
     var afterSocialSecurity = adjusted - (socialAmount*12);
