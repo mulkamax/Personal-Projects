@@ -1,12 +1,30 @@
-var age = 51;//prompt('What is your age?');
-var provider = 'Voya'; //prompt('Who is your current provider?');
-var maritalStatus = 'Single'; //prompt('What is your marital status?');
-var balance = 700000; //prompt('What is your current 401k balance?');
-var savingsPerPeriod = 250; //prompt('What is your current savings per pay period?');
-var income = 100000; //prompt('What is your current annual income?');
-var payPeriods = 2; //prompt('How many pay periods do you have per month?');
-var retirementAge = 65; //prompt('What age would you like to retire at?')
-var rateOfReturn = .06; //prompt('What is your expected rate of return? (6% is average while some may pick in between 4% and 8%)');
+//var age = 51;
+var age = prompt('What is your age?');
+//var provider = 'Voya';
+var provider = prompt('Who is your current provider?');
+//var maritalStatus = 'Single';
+var maritalStatus = prompt('What is your marital status? (Single, Married, Widowed, Divorced)');
+//var balance = 70000;
+var balance = prompt('What is your current 401k balance? (Insert only numbers)');
+//var savingsPerPeriod = 250;
+var savingsPerPeriod = prompt('What is your current savings per pay period? (Insert only numbers)');
+//var income = 90000;
+var income = prompt('What is your current annual income? (Insert only numbers)');
+//var payPeriods = 2;
+var payPeriods = prompt('How many pay periods do you have per month? (Insert only numbers)');
+//var retirementAge = 70;
+var retirementAge = prompt('What age would you like to retire at? (Can only claim social security from 62 to 70 years of age)');
+//var rateOfReturn = .06;
+var rateOfReturn = prompt('What is your expected rate of return? (6% is average while some may pick in between 4% and 8%) (Insert only numbers)(Ex: If you pick 6% then input .06)');
+
+// Converting strings into numbers
+age = parseFloat(age);
+balance = parseFloat(balance);
+savingsPerPeriod = parseFloat(savingsPerPeriod);
+income = parseFloat(income);
+payPeriods = parseFloat(payPeriods);
+retirementAge = parseFloat(retirementAge);
+rateOfReturn = parseFloat(rateOfReturn);
 
 // Functions
 function calcMonthlyIncome(income) {
@@ -24,9 +42,9 @@ function calcInflation(income, retirementAge, age) {
 }
 
 function calcRetirementMoney(retirementAge, maritalStatus, income, incomeAtRetirement, rateOfReturn) {
-    var adjusted = incomeAtRetirement*.80;
+    var adjusted = incomeAtRetirement*.80; // adjusted income based on not spending as much after retirement
     var socialAmount; // This is based on an estimated income calculations and if you anticipate living into the 90s. It's also based on male stats due to living less to make it so people can overestimate a little bit on how much they need to save.
-    if (maritalStatus === 'Single') { // stats from 2017
+    if (maritalStatus === 'Single' || maritalStatus === 'single') { // stats from 2017. Anticipating living till 90, a male and at an age of 47 in 2017 (this gives a rough estimate)
         if (income >= 110000) {
             if (retirementAge <= 65) {
                 socialAmount = 2050;
@@ -76,20 +94,90 @@ function calcRetirementMoney(retirementAge, maritalStatus, income, incomeAtRetir
               socialAmount = 1305;
           }
         }
+    } else if (maritalStatus === 'Married' || maritalStatus === 'married' || maritalStatus === 'Widowed' || maritalStatus === 'widowed' || maritalStatus === 'Divorced' || maritalStatus === 'divorced') {
+        if (income >= 110000) {
+            if (retirementAge <= 65) {
+                socialAmount = 2050;
+            } else if (retirementAge > 65 && retirementAge < 69) {
+                socialAmount = 2929;
+            } else {
+                socialAmount = 3632;
+            }
+        } else if (income >= 90000 && income < 110000) {
+            if (retirementAge <= 65) {
+                socialAmount = 1881;
+            } else if (retirementAge > 65 && retirementAge < 69) {
+                socialAmount = 2687;
+            } else {
+                socialAmount = 3332;
+            }
+        } else if (income >= 70000 && income < 90000) {
+            if (retirementAge <= 65) {
+                socialAmount = 1706;
+            } else if (retirementAge > 65 && retirementAge < 69) {
+                socialAmount = 2437;
+            } else {
+                socialAmount = 3022;
+            }
+        } else if (income >= 50000 && income < 70000) {
+          if (retirementAge <= 65) {
+              socialAmount = 1483;
+          } else if (retirementAge > 65 && retirementAge < 69) {
+              socialAmount = 2119;
+          } else {
+              socialAmount = 2628;
+          }
+        } else if (income >= 30000 && income < 50000) {
+          if (retirementAge <= 65) {
+              socialAmount = 1110;
+          } else if (retirementAge > 65 && retirementAge < 69) {
+              socialAmount = 1586;
+          } else {
+              socialAmount = 1967;
+          }
+        } else {
+          if (retirementAge <= 65) {
+              socialAmount = 737;
+          } else if (retirementAge > 65 && retirementAge < 69) {
+              socialAmount = 1053;
+          } else {
+              socialAmount = 1305;
+          }
+        }
     }
-    var afterSocialSecurity = adjusted - (socialAmount*12);
-    return afterSocialSecurity/rateOfReturn;
+    var afterSocialSecurity = adjusted - (socialAmount*12); // how much your annual social security  amount should be after social security
+    return afterSocialSecurity/rateOfReturn; // equation to get the expected goal for retirement
 }
 
 function calcMoneyNeeded(totalSavings, balance) {
     return totalSavings - balance;
 }
 
+function calcShortFall(age, retirementAge, needToSaveMoney, payPeriods, savingsPerPeriod) { // Calculates how much more or less money is needed to to be saved per pay period in order to reach your goal.
+    var yearsUntilRetirement = retirementAge - age;
+    var moneyNeededPerYear = needToSaveMoney/yearsUntilRetirement;
+    var moneyNeededPerMonth = moneyNeededPerYear/12;
+    var moneyNeededPerPayPeriods = moneyNeededPerMonth/payPeriods;
+    return moneyNeededPerPayPeriods - savingsPerPeriod;
+}
 
 
 
-console.log('Your monthly income is: $' + calcMonthlyIncome(income));
-console.log('Your savings rate is: ' + calcSavingRate(calcMonthlyIncome(income), payPeriods, savingsPerPeriod) + '%');
-console.log('Your annual income at retirement after inflation is: $' + calcInflation(income, retirementAge, age));
-console.log('Your expected total savings for retirement is: $' + calcRetirementMoney(retirementAge, maritalStatus, income, calcInflation(income, retirementAge, age), rateOfReturn));
-console.log('Your total amount left needed for retirement: $' + calcMoneyNeeded(calcRetirementMoney(retirementAge, maritalStatus, income, calcInflation(income, retirementAge, age), rateOfReturn), balance))
+//Variables from functions
+var monthlyIncome = calcMonthlyIncome(income);
+var savingsRate = calcSavingRate(calcMonthlyIncome(income), payPeriods, savingsPerPeriod);
+var inflation = calcInflation(income, retirementAge, age);
+var retireMoney = calcRetirementMoney(retirementAge, maritalStatus, income, inflation, rateOfReturn);
+var needToSaveMoney = calcMoneyNeeded(retireMoney, balance);
+var shortFall = calcShortFall(age, retirementAge, needToSaveMoney, payPeriods, savingsPerPeriod);
+
+
+
+//Logging the outputs to the console
+console.log('Your company is ' + provider + '.');
+console.log('Your monthly income is: $' + monthlyIncome);
+console.log('Your savings rate is: ' + savingsRate + '%');
+console.log('Your annual income at retirement after inflation is: $' + inflation);
+console.log('Your expected total savings for retirement is: $' + retireMoney);
+console.log('Your total amount left needed for retirement: $' + needToSaveMoney)
+console.log('Your shortfall per pay period is: $' + shortFall);
