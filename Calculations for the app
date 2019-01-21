@@ -161,16 +161,21 @@ function calcShortFall(age, retirementAge, needToSaveMoney, payPeriods, savingsP
     return moneyNeededPerPayPeriods - savingsPerPeriod;
 }
 
-function shortFallCases (shortFall, retirementAge, age, retireMoney) { //This is to help display the data in a more friendly way
+function shortFallCases (shortFall, retirementAge, age, retireMoney, needToSaveMoney, payPeriods) { //This is to help display the data in a more friendly way
   if (shortFall < 500) {
     return console.log('Your shortfall per pay period is: $' + shortFall);
   } else {
     var savingMore, newAge, ageDiff;
     ageDiff = retirementAge - age;
+    newAge = retirementAge;
+    savingMore = shortFall;
 
-    for (var ii = 0; ii < ageDiff; ii++) {
-      
+    while (savingMore > 500) {
+      ageDiff = ageDiff + 1;
+      newAge = newAge + 1;
+      savingMore = ((needToSaveMoney/ageDiff)/12)/payPeriods;
     }
+
     return console.log('In order to meet your goal, save $' + savingMore + ' per month and retire at age ' + newAge + ' instead.')
   }
 }
@@ -182,7 +187,7 @@ var inflation = calcInflation(income, retirementAge, age);
 var retireMoney = calcRetirementMoney(retirementAge, maritalStatus, income, inflation, rateOfReturn);
 var needToSaveMoney = calcMoneyNeeded(retireMoney, balance);
 var shortFall = calcShortFall(age, retirementAge, needToSaveMoney, payPeriods, savingsPerPeriod);
-var shortFallCase = shortFallCases(shortFall, retirementAge, age, retireMoney);
+var shortFallCase = shortFallCases(shortFall, retirementAge, age, retireMoney, needToSaveMoney, payPeriods);
 
 
 //Logging the outputs to the console
