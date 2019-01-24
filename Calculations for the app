@@ -10,8 +10,8 @@ var balance = prompt('What is your current 401k balance? (Insert only numbers)')
 var savingsPerPeriod = prompt('What is your current savings per pay period? (Insert only numbers)');
 //var income = 90000;
 var income = prompt('What is your current annual income? (Insert only numbers)');
-//var payPeriods = 2;
-var payPeriods = prompt('How many pay periods do you have per month? (Insert only numbers)');
+//var payPeriods = 26; // Total pay periods in a year(26 is about getting paid every other week)
+var payPeriods = prompt('How many pay periods do you have per year? (Insert only numbers)(26 is about getting paid every other week)');
 //var retirementAge = 70;
 var retirementAge = prompt('What age would you like to retire at? (Can only claim social security from 62 to 70 years of age)');
 //var rateOfReturn = .06;
@@ -26,20 +26,28 @@ payPeriods = parseFloat(payPeriods);
 retirementAge = parseFloat(retirementAge);
 rateOfReturn = parseFloat(rateOfReturn);
 
+
+
 // Functions
 function calcMonthlyIncome(income) {
     return income/12;
 }
 
-function calcSavingRate(monthlyIncome, payPeriods, savingsPerPeriod) {
-    var payPerPeriod  = monthlyIncome/payPeriods;
+
+
+function calcSavingRate(income, payPeriods, savingsPerPeriod) {
+    var payPerPeriod  = income/payPeriods;
     return (savingsPerPeriod/payPerPeriod)*100;
 }
+
+
 
 function calcInflation(income, retirementAge, age) {
     var avgInflation = 0.025; // average over the past 20 years
     return income + (income*avgInflation)*(retirementAge - age);
 }
+
+
 
 function calcRetirementMoney(retirementAge, maritalStatus, income, incomeAtRetirement, rateOfReturn) {
     var adjusted = incomeAtRetirement*.80; // adjusted income based on not spending as much after retirement
@@ -149,52 +157,71 @@ function calcRetirementMoney(retirementAge, maritalStatus, income, incomeAtRetir
     return afterSocialSecurity/rateOfReturn; // equation to get the expected goal for retirement
 }
 
+
+
 function calcMoneyNeeded(totalSavings, balance) {
     return totalSavings - balance;
 }
 
-function calcShortFall(age, retirementAge, needToSaveMoney, payPeriods, savingsPerPeriod) { // Calculates how much more or less money is needed to to be saved per pay period in order to reach your goal.
+
+
+function calcShortFall(age, retirementAge, needToSaveMoney, payPeriods, savingsPerPeriod, saveMoney, rateOfReturn) { // Calculates how much more, or less, money is needed to to be saved per pay period in order to reach your goal.
+
     var yearsUntilRetirement = retirementAge - age;
-    var moneyNeededPerYear = needToSaveMoney/yearsUntilRetirement;
-    var moneyNeededPerMonth = moneyNeededPerYear/12;
-    var moneyNeededPerPayPeriods = moneyNeededPerMonth/payPeriods;
-    return moneyNeededPerPayPeriods - savingsPerPeriod;
-}
 
-function shortFallCases (shortFall, retirementAge, age, retireMoney, needToSaveMoney, payPeriods) { //This is to help display the data in a more friendly way
-  if (shortFall < 500) {
-    return console.log('Your shortfall per pay period is: $' + shortFall);
-  } else {
-    var savingMore, newAge, ageDiff;
-    ageDiff = retirementAge - age;
-    newAge = retirementAge;
-    savingMore = shortFall;
-
-    while (savingMore > 500) {
-      ageDiff = ageDiff + 1;
-      newAge = newAge + 1;
-      savingMore = ((needToSaveMoney/ageDiff)/12)/payPeriods;
+    for (var ii = 1; ii <= yearsUntilRetirement; ii++) { //This finds the projected amount of money you will have in your 401k at your current rate of savings by the time you want to retire (considering inflation)
+        saveMoney = saveMoney + savingsPerPeriod*payPeriods;
+        saveMoney = saveMoney*(1 + rateOfReturn); // Inflation add-in saveMoney*(1 + rateOfReturn)*(1 + .025);
     }
 
-    return console.log('In order to meet your goal, save $' + savingMore + ' per month and retire at age ' + newAge + ' instead.')
-  }
+    var leftNeedToSave = needToSaveMoney - saveMoney;
+    var leftNeedPerYear = leftNeedToSave/yearsUntilRetirement;
+    return leftNeedPerYear/payPeriods;
 }
+
+
+
+function shortFallCases(shortFall, retirementAge, age, retireMoney, needToSaveMoney, payPeriods) { //This is to help display the data in a more friendly way as well as making a plan for them to save less per pay period while retiring a little later
+    if (shortFall < 500) {
+        return console.log('Your shortfall per pay period is: $' + shortFall);
+    } else {
+        var savingMore, newAge, ageDiff;
+        ageDiff = retirementAge - age;
+        newAge = retirementAge;
+        savingMore = shortFall;
+
+        while (savingMore > 300) {
+            if (newAge < 75) {
+                ageDiff = ageDiff + 1;
+                newAge = newAge + 1;
+
+                savingMore = (needToSaveMoney/ageDiff)/payPeriods;
+            } else {
+                break;
+            }
+        }
+
+        return console.log('In order to meet your goal, save $' + savingMore + ' more per pay period and retire at age ' + newAge + ' instead.')
+    }
+}
+
+
 
 //Variables from functions
 var monthlyIncome = calcMonthlyIncome(income);
-var savingsRate = calcSavingRate(calcMonthlyIncome(income), payPeriods, savingsPerPeriod);
+var savingsRate = calcSavingRate(income, payPeriods, savingsPerPeriod);
 var inflation = calcInflation(income, retirementAge, age);
 var retireMoney = calcRetirementMoney(retirementAge, maritalStatus, income, inflation, rateOfReturn);
 var needToSaveMoney = calcMoneyNeeded(retireMoney, balance);
-var shortFall = calcShortFall(age, retirementAge, needToSaveMoney, payPeriods, savingsPerPeriod);
-var shortFallCase = shortFallCases(shortFall, retirementAge, age, retireMoney, needToSaveMoney, payPeriods);
+var shortFall = calcShortFall(age, retirementAge, needToSaveMoney, payPeriods, savingsPerPeriod, balance, rateOfReturn);
+
 
 
 //Logging the outputs to the console
 console.log('Your company is ' + provider + '.');
 console.log('Your monthly income is: $' + monthlyIncome);
-console.log('Your savings rate is: ' + savingsRate + '%');
+console.log('Your savings rate per pay period is: ' + savingsRate + '%');
 console.log('Your annual income at retirement after inflation is: $' + inflation);
 console.log('Your expected total savings for retirement is: $' + retireMoney);
 console.log('Your total amount left needed for retirement: $' + needToSaveMoney)
-console.log('Your shortfall per pay period is: $' + shortFall);
+var shortFallCase = shortFallCases(shortFall, retirementAge, age, retireMoney, needToSaveMoney, payPeriods);
