@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>401K Calculator</title>
+      <link rel="shortcut icon" href="/sites/default/files/aimpointfavicon.png" type="image/png">
+      <link type="text/css" rel="stylesheet" href="MainStyle.css">
+      
+  </head>
+
+  <body>
+      <header class="head" id="myHeader">
+          <a href="http://www.aimpointpension.com/"><div class="logo"></div></a>
+          <div class="title">401K Calculator</div>
+          <script src="Header.js"></script>
+      </header>
+      
+      <div class="main">
+          <form>
+              <div class="infoview">
+                  
+                  <div>What is your age?</div>
+                  <div><input type="text" name="fullname" value="" size="30" id="age"></div>
+                  
+                  <div>Who is your current provider?</div>
+                  <div><input type="text" name="provider" value="" size="30" id="currentProvider"></div>
+                  
+                  <div>What is your marital status?<br>(Single, Married, Widowed, Divorced)</div>
+                  <div><input type="text" name="maritalStatus" value="" size="30" id="maritalStatus"></div>
+                  
+                  <div>What is your current 401k balance?</div>
+                  <div><input type="text" name="balance" value="" size="30" id="currentBalance"></div>
+                  
+                  <div>What is your current savings per pay period?</div>
+                  <div><input type="text" name="savingsPerPeriod" value="" size="30" id="savingsPerPayPeriod"></div>
+                  
+                  <div>What is your current annual income?</div>
+                  <div><input type="text" name="income" value="" size="30" id="annualIncome"></div>
+                  
+                  <div>How many pay periods do you have per year?<br>(26 is about getting paid every other week)</div>
+                  <div><input type="text" name="payPeriods" value="" size="30" id="payPeriodsPerYear"></div>
+                  
+                  <div>What age would you like to retire at?<br>(Can only claim social security from 62 to 70 years of age)</div>
+                  <div><input type="text" name="retirementAge" value="" size="30" id="retireAge"></div>
+                  
+                  <div>What is your expected rate of return?<br>(6% is average while some may pick in between 4% and 8%)<br>(Ex: If you pick 6% then input .06)</div>
+                  <div><input type="text" name="rateOfReturn" value="" size="30" id="rateOfReturn"></div>
+                  
+                  <div>
+                      <button class="btn-enter" type="submit">Submit</button>
+                      <button class="btn-reset" type="reset">Reset</button>
+                  </div>
+                  
+              </div>
+          </form>
+          
+          <div class="results" id="results">
+              <div class="resultsInfoDisplay">
+                  <div>401K Provider:</div>
+                  <div>Monthly Income:</div>
+                  <div>Savings rate per pay period:</div>
+                  <div>Annual income at retirement:</div>
+                  <div>Expected total savings for retirement:</div>
+                  <div>Amount left needed for retirement:</div>
+                  <div>Shortfall per pay period:</div>
+              </div>
+              <div class="resultsDisplay">
+                  <div id="provider"></div>
+                  <div id="income"></div>
+                  <div id="savingsRate"></div>
+                  <div id="incomeRetire"></div>
+                  <div id="expectedSavings"></div>
+                  <div id="needMoney"></div>
+                  <div id="shortfall"></div>
+              </div>
+          </div>
+          
+      </div>
+      
+      <script src="Information.js"></script>
+      <script src="Calculations.js"></script>
+
+      
+  </body>
+
+</html>
+
