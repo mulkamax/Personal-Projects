@@ -1,37 +1,112 @@
-/**********************************************
-*** GENERAL
-**********************************************/
+/***************************
+General
+***************************/
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat',sans-serif;
 }
 
-.background {
-  background-image: url("https://cdn.cnn.com/cnnnext/dam/assets/170407220921-07-iconic-mountains-pitons-restricted-full-169.jpg");
-  opacity: 0.7;
-  margin: auto;
-  max-width: 100%;
-  height: auto;
-  background-attachment: fixed;
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .main {
+    padding-top: 120px;
+}
+
+header {
+    background: linear-gradient(to top, rgb(252, 254, 255), rgb(210, 247, 221));
+    box-shadow: 0px 3px 6px grey;
+    padding: 9px;
+    display: flex;
+}
+
+.logo {
+    background-image: url(https://ppscontent.azureedge.net/image/4c2abfb177754950849a51b6705cff30/AimPointB.png);
+    background-repeat: no-repeat;
+    height: 100px;
+    width: 200px;
+    background-position: 100%;
 }
 
 .title {
-  background-color: orange;
-  color: blue;
-  text-align: center;
-  font-size: 85px;
-  text-shadow: 3px 2px white;
+    color: #469dd3;
+    font-size: 60px;
+    text-align: center;
+    margin: 15px;
+}
+
+.main {
+    display: flex;
+    background-color: rgb(244, 243, 239);
 }
 
 .infoview {
-  /*position: absolute;*/
-  float: left;
-  padding: 40px;
-  background: rgba(0, 0, 0, .25);
-  text-align: left;
-  font-family: "Times New Roman", Times, serif;
+    display: flex;
+    flex-direction: column;
+    background: #469dd3;
+    padding: 18px;
+    font-size: 15px;
+    color: white;
+}
+
+.infoview div {
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+}
+
+.infoview div:last-child {
+    margin-bottom: 0px;
+}
+
+.results {
+    background: white;
+    height: 600px;
+    width: 600px;
+    margin: auto;
+    padding: 9px;
+    box-shadow: 0px 3px 30px #469dd3;
+    display: flex;
+    flex-direction: row;
+}
+
+.results:hover {
+    box-shadow: 0px 3px 50px #469dd3;
+}
+
+.results div {
+    margin-bottom: 30px;
+    padding: 15px;
+}
+
+.resultsInfoDisplay {
+    text-align: right;
+}
+
+.resultsDisplay {
+    text-align: center;
+}
+
+.btn-enter {
+  background-color: rgb(255, 128, 0);
+  color: rgb(242, 242, 242);
+  border: 1px solid;
+  font-size: 12.5px;
+  padding: 6.25px;
+  cursor: pointer;
+}
+
+.btn-reset {
+  background-color: rgb(255, 128, 0);
+  color: rgb(242, 242, 242);
+  border: 1px solid;
+  font-size: 12.5px;
+  padding: 6.25px;
+  cursor: pointer;
 }
 
 
