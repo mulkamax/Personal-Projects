@@ -1,6 +1,6 @@
 var information;
 
-init();
+
 
 document.querySelector('.btn-enter').addEventListener('click', function() {
     
@@ -86,10 +86,4 @@ function onloadCallback() {
     
   };
 
-function init() {
-    
-    
-    document.querySelector('.resultsDisplay').classList.remove('resultsDisplay');
-    
-}
 
